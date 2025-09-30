@@ -1,0 +1,13 @@
+Aim: Path finding using Ant Colony Optimization:
+
+using AntColony
+
+import AntColony: aco
+
+distance_matrix = rand(10, 10)
+
+aco(distance_matrix, is_tour = true)
+
+aco(distance_matrix, start_node = 1, end_node = 5)
+
+aco(distance_matrix, start_node = 2, end_node = 10)
