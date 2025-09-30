@@ -33,3 +33,32 @@ end
 
 
 fibonacci_search(f,1,2,5);
+
+
+CODE:
+function fibonacci_search(f, a, b, n; ϵ=0.01)
+    s = (1 - √5) / (1 + √5)
+    ρ(i) = 1 / (1.618 * (1 - s^(i+1)) / (1 - s^i))  
+    d, yd = ρ(n) * b + (1 - ρ(n)) * a, f(ρ(n) * b + (1 - ρ(n)) * a)
+    for i in 1:n-1
+        c = (i == n-1) ? ϵ*a + (1-ϵ)*d : ρ(n-i) * a + (1 - ρ(n-i)) * b
+        yc = f(c)
+        if yc < yd
+            b, d, yd = d, c, yc
+        else
+            a, b = b, c
+        end
+    end
+    return min(a, b), max(a, b)
+end
+
+
+function f(x)
+return x*x-x+1
+end
+
+
+fibonacci_search(f,0,2,10)
+fibonacci_search(f,1,2,5)
+
+
