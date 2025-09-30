@@ -1,65 +1,23 @@
-AIM: Implement quadratic fit search:
-
-function quadratic_fit_search(f, a, b, c, n)
- ya, yb, yc = f(a), f(b), f(c)
- for i in 1:n-3
-  print(a,"\n",b,"\n",c,"\n")
-  x = 0.5*(ya*(b^2-c^2)+yb*(c^2-a^2)+yc*(a^2-b^2)) /
-  (ya*(b-c) +yb*(c-a) +yc*(a-b))
-  yx = f(x)
-  if x > b
-   if yx > yb
-    c, yc = x, yx
-   else
-    a, ya, b, yb = b, yb, x, yx
-   end
-  elseif x < b
-   if yx > yb
-    a, ya = x, yx
-   else
-    c, yc, b, yb = b, yb, x, yx
-   end
-  end
- end
- return (a, b, c)
-end
-
-function f(x)
- return x*x-x+1
-end
-
-quadratic_fit_search(f,1,2,3,5)
-
-
+AIM: Implement golden section search:
 
 CODE:
-function quadratic_fit_search(f, a, b, c, n)
-    ya, yb, yc = f(a), f(b), f(c)
-    for _ in 1:n-3
-        denom = ya*(b - c) + yb*(c - a) + yc*(a - b)
-        if abs(denom) < 1e-12
-            break
-        end
-        x = 0.5 * (ya*(b^2 - c^2) + yb*(c^2 - a^2) + yc*(a^2 - b^2)) / denom
-        yx = f(x)
-        if x > b
-            if yx > yb
-                c, yc = x, yx
-            else
-                a, ya, b, yb = b, yb, x, yx
-            end
+function golden_section_search(f, a, b, n)
+    ρ = (√5 - 1) / 2   # golden ratio conjugate ≈ 0.618
+    d, yd = ρ*b + (1-ρ)*a, f(ρ*b + (1-ρ)*a)
+    for _ in 1:n-1
+        c, yc = ρ*a + (1-ρ)*b, f(ρ*a + (1-ρ)*b)
+        if yc < yd
+            b, d, yd = d, c, yc
         else
-            if yx > yb
-                a, ya = x, yx
-            else
-                c, yc, b, yb = b, yb, x, yx
-            end
+            a, b = b, c
         end
     end
-    return a, b, c
+    return min(a, b), max(a, b)
 end
+
 
 # Test function
 f(x) = x^2 - x + 1
-OUTPUT:
-quadratic_fit_search(f,0,1,2,10)
+
+Output: 
+golden_section_search(f,0,2,10)
